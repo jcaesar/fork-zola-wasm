@@ -107,7 +107,7 @@ pub fn create_new_project(name: &str, force: bool) -> Result<()> {
     println!();
     console::success(&format!(
         "Done! Your site was created in {}",
-        strip_unc(&canonicalize(path).unwrap())
+        strip_unc(canonicalize(path).as_deref().unwrap_or(path))
     ));
     println!();
     console::info(
@@ -246,6 +246,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(not(target_os = "wasi"))]
     fn strip_unc_test() {
         let mut dir = temp_dir();
         dir.push("new_project1");
